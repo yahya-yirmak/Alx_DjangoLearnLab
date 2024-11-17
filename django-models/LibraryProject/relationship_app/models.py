@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import date
 
 # Create your models here.
 
@@ -14,8 +15,8 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    publish_date = models.DateField()
-    isbn_number = models.CharField(max_length=13)
+    publish_date = models.DateField(default=date.today)
+    isbn_number = models.CharField(max_length=13, default='0000000000000')
 
     class Meta:
         permissions = [
