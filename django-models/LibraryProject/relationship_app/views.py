@@ -33,11 +33,14 @@ class register(CreateView):
 
 
 def is_admin(user):
-    return user.userprofile.role == 'Admin'
+    if hasattr(user, 'userprofile') and user.userprofile.role == 'Admin':
+        return True
+    return False
 
 @user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'admin_view.html')
+
 
 
 
