@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from .models import Document
 from .models import Book
-from .forms import SearchForm
+from .forms import ExampleForm
 
 # Create your views here.
 
@@ -41,7 +41,7 @@ def delete_document(request, doc_id):
     return HttpResponse("Document deleted.")
 
 def search_books(request):
-    form = SearchForm(request.GET or None)
+    form = ExampleForm(request.GET or None)
     books = []
     if form.is_valid():
         search_query = form.cleaned_data['query']
