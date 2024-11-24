@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Book
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
+from .models import Document
 
 # Register your models here.
 
@@ -11,6 +12,8 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ('publication_year',)                 
 
 admin.site.register(Book, BookAdmin)
+
+admin.site.register(Document)
 
 
 class CustomUserAdmin(UserAdmin):
