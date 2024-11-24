@@ -3,8 +3,15 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from .models import Document
+from .models import Book 
 
 # Create your views here.
+
+
+def book_list(request):
+    books = Book.objects.all()  # Retrieve all books
+    return render(request, 'bookshelf/book_list.html', {'books': books})
+
 
 @permission_required('app_name.can_view', raise_exception=True)
 def view_document(request, doc_id):
