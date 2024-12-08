@@ -3,14 +3,20 @@ from rest_framework import status
 from django.urls import reverse
 from .models import Book
 from .serializers import BookSerializer
+from django.contrib.auth.models import User
 
 class BookAPITests(APITestCase):
 
     def setUp(self):
+        # Create a test user
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+        # Log in the user
+        self.client.login(username="testuser", password="testpass")
         # Create test data
         self.book1 = Book.objects.create(title="Test Book 1", author="Author 1", publication_year=2020)
         self.book2 = Book.objects.create(title="Test Book 2", author="Author 2", publication_year=2021)
-        self.list_url = reverse('book-list')  # Replace 'book-list' with your API endpoint name
+        self.list_url = reverse('book-list')  # Replace 'book-list' with your endpoint
+
 
     def test_list_books(self):
         # Test retrieving the list of books
