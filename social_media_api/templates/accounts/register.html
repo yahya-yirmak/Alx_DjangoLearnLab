@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+<form method="post" action="{% url 'register' %}">
+    {% csrf_token %}
+    {{ fom.as_p }}
+    <button type="submit">register</button>
+</form>
