@@ -134,7 +134,8 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 # Configure DRF Authentication
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework_authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+
     ],
 
     'DEFAULT_PERMISSION_CLASSES':[
