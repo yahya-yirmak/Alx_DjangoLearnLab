@@ -3,9 +3,9 @@ from rest_framework.routers import DefaultRouter
 from .views import PostViewset, CommentViewset
 
 router = DefaultRouter()
-router.register(r'my-posts', PostViewset)
-router.register(r'my-comments', CommentViewset)
+router.register(r'posts', PostViewset)
+router.register(r'comments', CommentViewset)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('api/', include(router.urls))
 ]
