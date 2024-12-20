@@ -44,7 +44,7 @@ class LoginUser(APIView):
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FollowUserView(generics.APIView):
+class FollowUserView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CustomUser.objects.all()
@@ -72,7 +72,7 @@ class FollowUserView(generics.APIView):
             )
 
 
-class UnfollowUserView(generics.APIView):
+class UnfollowUserView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CustomUser.objects.all()
