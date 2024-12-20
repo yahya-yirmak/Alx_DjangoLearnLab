@@ -7,6 +7,10 @@ from .serializers import UserRegistrationSerializer, LoginSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from .models import CustomUser
+from rest_framework.generics import GenericAPIView
+
+
+
 
 
 # Configure View to handle Token Authentication
@@ -40,13 +44,14 @@ class LoginUser(APIView):
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FollowUserView(APIView):
+class FollowUserView(GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    queryset = CustomUser.objects.all()
 
     def post(self, request, username):
         try:
-            user_to_follow = CustomUser.objects.get(username=username)
+            user_to_follow = self.get_queryset().get(username=username)
             
             if request.user == user_to_follow:
                 return Response(
@@ -67,13 +72,14 @@ class FollowUserView(APIView):
             )
 
 
-class UnfollowUserView(APIView):
+class UnfollowUserView(GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-        
+    queryset = CustomUser.objects.all()
+
     def post(self, request, username):
         try:
-            user_to_unfollow = CustomUser.objects.get(username=username)
+            user_to_unfollow = self.get_queryset().get(username=username)
 
             request.user.following.remove(user_to_unfollow)
             return Response(
@@ -85,4 +91,3 @@ class UnfollowUserView(APIView):
                 {"detail": "User not found."},
                 status=status.HTTP_404_NOT_FOUND
             )
-
