@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 # Create your views here.
 
 
@@ -19,7 +19,7 @@ class CommentViewset(viewsets.ModelViewSet):
 
 class FeedView(ListAPIView):
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
