@@ -1,14 +1,12 @@
-from django.shortcuts import render
-from django.views.generic import CreateView
-from django.urls import reverse_lazy
-from django.contrib.auth.forms import UserCreationForm
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserRegistrationSerializer, LoginSerializer
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from .models import CustomUser
 
 
 # Configure View to handle Token Authentication
@@ -24,7 +22,6 @@ class CustomTokenView(APIView):
             return Response({'error':'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-
 class RegisterUser(APIView):
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
@@ -33,6 +30,7 @@ class RegisterUser(APIView):
             return Response({'message': 'User has been created successfully.'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class LoginUser(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -40,3 +38,51 @@ class LoginUser(APIView):
             serializer.validated_data
             return Response({'message': 'Login successful.'}, status=status.HTTP_200_OK)
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FollowUserView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, username):
+        try:
+            user_to_follow = CustomUser.objects.get(username=username)
+            
+            if request.user == user_to_follow:
+                return Response(
+                    {"detail": "You cannot follow yourself."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            request.user.following.add(user_to_follow)
+            return Response(
+                {"detail": f"You are now following {username}."},
+                status=status.HTTP_200_OK
+            )
+        
+        except CustomUser.DoesNotExist:
+            return Response(
+                {"detail": "User not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class UnfollowUserView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+        
+    def post(self, request, username):
+        try:
+            user_to_unfollow = CustomUser.objects.get(username=username)
+
+            request.user.following.remove(user_to_unfollow)
+            return Response(
+                {"detail": f"You have unfollowed {username}."},
+                status=status.HTTP_200_OK
+            )
+        except CustomUser.DoesNotExist:
+            return Response(
+                {"detail": "User not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
