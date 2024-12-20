@@ -7,7 +7,7 @@ from .serializers import UserRegistrationSerializer, LoginSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from .models import CustomUser
-from rest_framework.generics import GenericAPIView
+from rest_framework import generics
 
 
 
@@ -44,7 +44,7 @@ class LoginUser(APIView):
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FollowUserView(GenericAPIView):
+class FollowUserView(generics.APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CustomUser.objects.all()
@@ -72,7 +72,7 @@ class FollowUserView(GenericAPIView):
             )
 
 
-class UnfollowUserView(GenericAPIView):
+class UnfollowUserView(generics.APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = CustomUser.objects.all()
