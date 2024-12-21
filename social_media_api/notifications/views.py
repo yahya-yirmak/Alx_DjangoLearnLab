@@ -12,9 +12,9 @@ class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        post_id = request.data.get('post_id')
+        pk = request.data.get('post_id')
         try:
-            post = post = generics.get_object_or_404(Post, pk=post_id)
+            post = post = generics.get_object_or_404(Post, pk=pk)
             like, created = Like.objects.get_or_create(post=post, liked_by = request.user)
             if created:
                 Notification.objects.create(
